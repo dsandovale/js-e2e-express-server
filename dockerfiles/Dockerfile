@@ -5,7 +5,7 @@ FROM node:latest
 WORKDIR /app
 
 # Copiar el archivo package.json y package-lock.json al directorio de trabajo
-COPY package*.json ./
+COPY ../package*.json ./
 
 # Instalar las dependencias del proyecto
 RUN npm install
