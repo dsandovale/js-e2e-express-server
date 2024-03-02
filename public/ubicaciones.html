@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Tree - Ubicaciones</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.webix.com/edge/webix.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.1.96/css/materialdesignicons.min.css" integrity="sha512-NaaXI5f4rdmlThv3ZAVS44U9yNWJaUYWzPhvlg5SC7nMRvQYV9suauRK3gVbxh7qjE33ApTPD+hkOW78VSHyeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.webix.com/edge/webix.js"></script>
+</head>
+<body>
+  <h1>Tree Webix App!</h1>
+
+  <!-- Your Webix code goes here -->
+
+</body>
+<script>
+  var treedata = [
+    { id: "1", value: "Torre Silver", open: true, data: [
+        { id: "1.1", value: "Piso 1", open: true, data: [
+            { id: "1.1.1", value: "Sala 1-1" },
+            { id: "1.1.2", value: "Sala 1-2" },
+            { id: "1.1.3", value: "Sala 1-3" },
+            { id: "1.1.4", value: "Baño 1-H" },
+            { id: "1.1.5", value: "Baño 1-M" },
+            { id: "1.1.6", value: "Cocina 1" },
+            { id: "1.1.7", value: "Sala Profesores 1" }
+          ]
+        },
+        { id: "1.2", value: "Piso 2", open: true, data: [
+            { id: "1.2.1", value: "Sala 2-1" },
+            { id: "1.2.2", value: "Sala 2-2" },
+            { id: "1.2.3", value: "Sala 2-3" },
+            { id: "1.2.4", value: "Baño 2-H" },
+            { id: "1.2.5", value: "Baño 2-M" },
+            { id: "1.2.6", value: "Laboratorio Computación 2-1" }
+          ]
+        },
+        { id: "1.3", value: "Piso 3", open: true, data: [
+            { id: "1.3.1", value: "Sala 3-1" },
+            { id: "1.3.2", value: "Sala 3-2" },
+            { id: "1.3.3", value: "Sala 3-3" },
+            { id: "1.3.4", value: "Baño 3-H" },
+            { id: "1.3.5", value: "Baño 3-M" },
+            { id: "1.3.6", value: "Laboratorio Computación 3-1" }
+          ]
+        },
+        { id: "1.4", value: "Piso 4", open: true, data: [
+            { id: "1.4.1", value: "Laboratorio Quimica 4-1" },
+            { id: "1.4.2", value: "Laboratorio Fisica 4-2" },
+            { id: "1.4.3", value: "Laboratorio Biologia 4-3" },
+            { id: "1.4.5", value: "Baño 4-H" },
+            { id: "1.4.6", value: "Baño 4-M" }
+          ]
+        },
+      ]
+    },
+    { id: "2", value: "Complejo Cooper", open: true, data: [
+        { id: "2.1", value: "Área Este", open: true, data: [
+            { id: "2.1.1", value: "Sala Profesores Este" },
+            { id: "2.1.2", value: "Baño Profesores Este-H" },
+            { id: "2.1.3", value: "Baño Profesores Este-M" },
+            { id: "2.1.4", value: "Cocina Este" }
+          ]
+        },
+        { id: "2.2", value: "Área Oeste", open: true, data: [
+            { id: "2.2.1", value: "Oficina Director" },
+            { id: "2.2.2", value: "Oficina Sub-Director" },
+            { id: "2.2.3", value: "Baño Dirección Oeste-M" }
+          ]
+        },
+      ]
+    }
+  ];
+
+  function makeLocation(edit, detailItem) {
+    let obj = {cAccion: 'A', cCodBodega: '',  cDesBodega: '', nIdBodega: 0, nActivo: '', cUser: ""}
+    webix.ui({
+      view:"window", head:"Maestro Ubicaciones", id:"winBo_Warehouse", 
+      position:"center", close:false, modal:true,
+      on:{
+        'onHide':function()
+        {
+          this.destructor();
+        },
+        'onShow':function() {
+          $$("txtNivel_Windows_Location").setValue(detailItem.$level);
+          let parentItem = $$("tree_Location").getItem(detailItem.$parent)
+          if(parentItem !== undefined){
+            $$("txtPadre_Windows_Location").setValue(parentItem.value)
+          } else {
+            $$("txtPadre_Windows_Location").setValue("Top Level")
+          }
+          if(edit){
+            $$("txtNombre_Windows_Location").setValue(edit.CodBodega)
+          }
+        }
+      },
+      body:{view:"layout",
+        rows:[
+          {height:10},
+          {view:"form", borderless:true, id:"form_Windows_Location", name:"form_Windows_Location",
+            rules:{
+              "txtNombre_Windows_Location":webix.rules.isNotEmpty
+            },
+            elementsConfig:{
+              labelPosition:"top"
+            },
+            rows:[
+              {
+                cols:[
+                  {
+                    rows:[
+                      {
+                        cols:[
+                          { view:"text", id:"txtPadre_Windows_Location", name:"txtPadre_Windows_Location", label:"Padre", width:200, labelWidth: 90, readonly:true },
+                          { view:"text", id:"txtNivel_Windows_Location", name:"txtNivel_Windows_Location", label:"Creación en nivel", width:200, labelWidth: 90, readonly:true },
+                        ]
+                      },
+                      {
+                        cols:[
+                          { view:"text", id:"txtNombre_Windows_Location", name:"txtNombre_Windows_Location", label:"Ubicación", placeholder:"Torre o Piso o Sala", width:200, labelWidth: 90},
+                          {},
+                          { view:"checkbox", id:"chkBo_Act", label:"Activa", value:1, width:80 },
+                          {}
+                        ]
+                      },
+                      { height:50 },
+                      {
+                        cols:[
+                          { view:"button", type:"icon", icon:"mdi mdi-content-save", label:"Guardar",
+                            click:function(){
+                              if($$("form_Windows_Location").validate()){
+                                $$("winBo_Warehouse").close();
+                              }
+                            }
+                          },
+                          { view:"button", type:"icon", icon:"mdi mdi-content-save-off", label:"Cancelar",
+                            click:function(){
+                              webix.alert("Cambios no guardados.");
+                              $$("winBo_Warehouse").close();
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+            ]
+          },
+          {}
+        ]
+        }
+      }).show();
+  }
+
+  webix.ui({
+    view:"layout", id:"ubicacion", rows:[
+      {
+        view:"toolbar", id:"toolbar_Location",
+        cols:[
+          { view:"text", align:"center", placeholder: "Búsqueda", tooltip:"Buscar por nombre...", id:"search_Location", name:"search_Location", width:300,
+            required:true,
+            on:{
+              'onKeyPress':function(code, e)
+              {
+                $$("tree_Location").filter("#value#",this.getValue());
+              }
+            },
+          },
+          {},
+          { view:"button", id:"btn_new_Location", type:"icon", icon:"mdi mdi-plus-circle-outline", label:"Nuevo", width:130,
+            click:function(){
+              var selectedItem =  $$("tree_Location").getSelectedId();
+              if(selectedItem != null){
+                var detailItem = $$("tree_Location").getItem(selectedItem);
+                makeLocation(false, detailItem);
+              }
+            }
+          },
+          { view:"button", id:"btn_edit_Location", type:"icon", icon:"mdi mdi-circle-edit-outline", label:"Editar", width:130,
+            click:function(){
+
+            }
+          },
+          { view:"button", id:"btn_delete_Location", type:"icon", icon:"mdi mdi-delete-circle-outline", label:"Eliminar", width:130,
+            click:function(){
+
+            }
+          }
+        ]
+      },
+      {
+        view: "tree", id:"tree_Location", type:"lineTree", select:true,
+        type:{
+          folder:function(obj){
+            if(obj.$level == 1)
+              return "<span class='webix_icon mdi mdi mdi-city'></span>";
+            if (obj.$level == 2)
+              return "<span class='webix_icon mdi mdi-floor-plan'></span>";
+            return  "<span class='webix_icon mdi mdi-door-sliding'></span>";
+          }
+        },
+        data: treedata
+      }	
+    ]
+  });
+</script>
+</html>

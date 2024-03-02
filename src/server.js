@@ -22,7 +22,10 @@ const create = async () => {
     // root route - serve static file
     app.get('/', (req, res) => {
         return res.sendFile(path.join(__dirname, '../public/client.html'));
+    });
 
+    app.get('/ubicaciones', (req, res) => {
+      return res.sendFile(path.join(__dirname, '../public/ubicaciones.html'));
     });
 
     // Catch errors
